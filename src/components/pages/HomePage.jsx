@@ -14,7 +14,7 @@ import { useCart } from "@/hooks/useCart"
 const HomePage = () => {
   const [quickViewProduct, setQuickViewProduct] = useState(null)
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false)
-  const { products: featuredProducts, loading, error, getFeaturedProducts } = useProducts()
+const { products: featuredProducts, loading, error, getFeaturedProducts } = useProducts()
   const { addToCart } = useCart()
 
   useEffect(() => {
@@ -26,7 +26,7 @@ const HomePage = () => {
     setIsQuickViewOpen(true)
   }
 
-  const handleAddToCart = (product) => {
+const handleAddToCart = (product) => {
     addToCart(product, product.quantity || 1, product.selectedBand || "")
   }
 
@@ -229,7 +229,7 @@ const HomePage = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
               >
-                <Link to={`/products?brand=${encodeURIComponent(brand.name)}`}>
+<Link to={`/products?brand=${encodeURIComponent(brand.name)}`}>
                   <Card hover className="p-6 text-center group">
                     <div className="w-20 h-10 mx-auto mb-3 bg-gray-100 rounded overflow-hidden">
                       <img

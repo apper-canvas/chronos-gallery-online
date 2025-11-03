@@ -72,7 +72,7 @@ const ProductsPage = () => {
     setIsQuickViewOpen(true)
   }
   
-  const handleAddToCart = (product) => {
+const handleAddToCart = (product) => {
     addToCart(product, product.quantity || 1, product.selectedBand || "")
   }
   

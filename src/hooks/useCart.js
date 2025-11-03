@@ -11,7 +11,7 @@ export const useCart = () => {
     try {
       setLoading(true)
       setError("")
-      const cartData = await cartService.getCart()
+const cartData = await cartService.getCart()
       setCart(cartData)
     } catch (err) {
       setError("Failed to load cart")
@@ -24,9 +24,9 @@ export const useCart = () => {
   const addToCart = async (product, quantity = 1, selectedBand = "") => {
     try {
       setError("")
-      const updatedCart = await cartService.addItem(product, quantity, selectedBand)
+const updatedCart = await cartService.addItem(product, quantity, selectedBand)
       setCart(updatedCart)
-      toast.success(`Added ${product.brand} ${product.model} to cart`)
+toast.success(`Added ${product.brand_c} ${product.model_c} to cart`)
     } catch (err) {
       setError("Failed to add item to cart")
       toast.error("Failed to add item to cart")

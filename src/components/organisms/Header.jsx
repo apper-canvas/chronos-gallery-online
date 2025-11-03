@@ -1,16 +1,17 @@
-import React, { useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import ApperIcon from "@/components/ApperIcon"
-import SearchBar from "@/components/molecules/SearchBar"
-import Button from "@/components/atoms/Button"
-import { cn } from "@/utils/cn"
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import ApperIcon from "@/components/ApperIcon";
+import Button from "@/components/atoms/Button";
+import SearchBar from "@/components/molecules/SearchBar";
+import LogoutButton from "@/components/molecules/LogoutButton";
+import { cn } from "@/utils/cn";
 
 const Header = ({ cartItemCount = 0 }) => {
   const [searchQuery, setSearchQuery] = useState("")
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const navigate = useNavigate()
   
-  const categories = [
+const categories = [
     { name: "Shop All", path: "/products" },
     { name: "Luxury", path: "/products?category=luxury" },
     { name: "Sport", path: "/products?category=sport" },
@@ -40,7 +41,7 @@ const Header = ({ cartItemCount = 0 }) => {
           
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-8">
-            {categories.map((category) => (
+{categories.map((category) => (
               <Link
                 key={category.name}
                 to={category.path}
@@ -50,6 +51,7 @@ const Header = ({ cartItemCount = 0 }) => {
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold transition-all duration-300 group-hover:w-full" />
               </Link>
             ))}
+            <LogoutButton />
           </nav>
           
           {/* Desktop Search */}
@@ -103,7 +105,7 @@ const Header = ({ cartItemCount = 0 }) => {
           
           {/* Mobile Navigation */}
           <nav className="grid grid-cols-2 gap-4">
-            {categories.map((category) => (
+{categories.map((category) => (
               <Link
                 key={category.name}
                 to={category.path}
@@ -112,6 +114,10 @@ const Header = ({ cartItemCount = 0 }) => {
               >
                 {category.name}
               </Link>
+            ))}
+            <div className="pt-2 border-t border-gray-200">
+              <LogoutButton mobile onClick={() => setIsMobileMenuOpen(false)} />
+            </div>
             ))}
           </nav>
         </div>

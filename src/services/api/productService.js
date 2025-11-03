@@ -1,144 +1,428 @@
-import productsData from "@/services/mockData/products.json"
-
-// Simulate API delay
-const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms))
+import { toast } from 'react-toastify'
 
 class ProductService {
   constructor() {
-    this.products = [...productsData]
+    const { ApperClient } = window.ApperSDK
+    this.apperClient = new ApperClient({
+      apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+      apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+    })
+    this.tableName = 'product_c'
   }
 
   async getAll() {
-    await delay(300)
-    return [...this.products]
+    try {
+      const params = {
+        fields: [
+          {"field": {"Name": "Id"}},
+          {"field": {"Name": "Name"}},
+          {"field": {"Name": "brand_c"}},
+          {"field": {"Name": "model_c"}},
+          {"field": {"Name": "price_c"}},
+          {"field": {"Name": "original_price_c"}},
+          {"field": {"Name": "images_c"}},
+          {"field": {"Name": "category_c"}},
+          {"field": {"Name": "movement_c"}},
+          {"field": {"Name": "case_size_c"}},
+          {"field": {"Name": "case_material_c"}},
+          {"field": {"Name": "band_material_c"}},
+          {"field": {"Name": "band_options_c"}},
+          {"field": {"Name": "water_resistance_c"}},
+          {"field": {"Name": "description_c"}},
+          {"field": {"Name": "specifications_c"}},
+          {"field": {"Name": "in_stock_c"}},
+          {"field": {"Name": "stock_count_c"}},
+          {"field": {"Name": "featured_c"}}
+        ]
+      }
+      
+      const response = await this.apperClient.fetchRecords(this.tableName, params)
+      
+      if (!response.success) {
+        console.error(response.message)
+        toast.error(response.message)
+        return []
+      }
+      
+      return response.data || []
+    } catch (error) {
+      console.error("Error fetching products:", error?.response?.data?.message || error)
+      return []
+    }
   }
 
   async getById(id) {
-    await delay(200)
-    const product = this.products.find(p => p.Id === parseInt(id))
-    return product ? { ...product } : null
+    try {
+      const params = {
+        fields: [
+          {"field": {"Name": "Id"}},
+          {"field": {"Name": "Name"}},
+          {"field": {"Name": "brand_c"}},
+          {"field": {"Name": "model_c"}},
+          {"field": {"Name": "price_c"}},
+          {"field": {"Name": "original_price_c"}},
+          {"field": {"Name": "images_c"}},
+          {"field": {"Name": "category_c"}},
+          {"field": {"Name": "movement_c"}},
+          {"field": {"Name": "case_size_c"}},
+          {"field": {"Name": "case_material_c"}},
+          {"field": {"Name": "band_material_c"}},
+          {"field": {"Name": "band_options_c"}},
+          {"field": {"Name": "water_resistance_c"}},
+          {"field": {"Name": "description_c"}},
+          {"field": {"Name": "specifications_c"}},
+          {"field": {"Name": "in_stock_c"}},
+          {"field": {"Name": "stock_count_c"}},
+          {"field": {"Name": "featured_c"}}
+        ]
+      }
+      
+      const response = await this.apperClient.getRecordById(this.tableName, parseInt(id), params)
+      
+      if (!response.success) {
+        console.error(response.message)
+        return null
+      }
+      
+      return response.data
+    } catch (error) {
+      console.error(`Error fetching product ${id}:`, error?.response?.data?.message || error)
+      return null
+    }
   }
 
   async getByCategory(category) {
-    await delay(300)
-    return this.products
-      .filter(p => p.category.toLowerCase() === category.toLowerCase())
-      .map(p => ({ ...p }))
+    try {
+      const params = {
+        fields: [
+          {"field": {"Name": "Id"}},
+          {"field": {"Name": "Name"}},
+          {"field": {"Name": "brand_c"}},
+          {"field": {"Name": "model_c"}},
+          {"field": {"Name": "price_c"}},
+          {"field": {"Name": "original_price_c"}},
+          {"field": {"Name": "images_c"}},
+          {"field": {"Name": "category_c"}},
+          {"field": {"Name": "movement_c"}},
+          {"field": {"Name": "case_size_c"}},
+          {"field": {"Name": "case_material_c"}},
+          {"field": {"Name": "band_material_c"}},
+          {"field": {"Name": "band_options_c"}},
+          {"field": {"Name": "water_resistance_c"}},
+          {"field": {"Name": "description_c"}},
+          {"field": {"Name": "specifications_c"}},
+          {"field": {"Name": "in_stock_c"}},
+          {"field": {"Name": "stock_count_c"}},
+          {"field": {"Name": "featured_c"}}
+        ],
+        where: [{"FieldName": "category_c", "Operator": "Contains", "Values": [category]}]
+      }
+      
+      const response = await this.apperClient.fetchRecords(this.tableName, params)
+      
+      if (!response.success) {
+        console.error(response.message)
+        toast.error(response.message)
+        return []
+      }
+      
+      return response.data || []
+    } catch (error) {
+      console.error("Error fetching products by category:", error?.response?.data?.message || error)
+      return []
+    }
   }
 
   async search(query) {
-    await delay(250)
-    const searchTerm = query.toLowerCase()
-    return this.products
-      .filter(p => 
-        p.brand.toLowerCase().includes(searchTerm) ||
-        p.model.toLowerCase().includes(searchTerm) ||
-        p.description.toLowerCase().includes(searchTerm)
-      )
-      .map(p => ({ ...p }))
+    try {
+      const params = {
+        fields: [
+          {"field": {"Name": "Id"}},
+          {"field": {"Name": "Name"}},
+          {"field": {"Name": "brand_c"}},
+          {"field": {"Name": "model_c"}},
+          {"field": {"Name": "price_c"}},
+          {"field": {"Name": "original_price_c"}},
+          {"field": {"Name": "images_c"}},
+          {"field": {"Name": "category_c"}},
+          {"field": {"Name": "movement_c"}},
+          {"field": {"Name": "case_size_c"}},
+          {"field": {"Name": "case_material_c"}},
+          {"field": {"Name": "band_material_c"}},
+          {"field": {"Name": "band_options_c"}},
+          {"field": {"Name": "water_resistance_c"}},
+          {"field": {"Name": "description_c"}},
+          {"field": {"Name": "specifications_c"}},
+          {"field": {"Name": "in_stock_c"}},
+          {"field": {"Name": "stock_count_c"}},
+          {"field": {"Name": "featured_c"}}
+        ],
+        whereGroups: [{
+          "operator": "OR",
+          "subGroups": [
+            {
+              "conditions": [
+                {"fieldName": "brand_c", "operator": "Contains", "values": [query]},
+                {"fieldName": "model_c", "operator": "Contains", "values": [query]},
+                {"fieldName": "description_c", "operator": "Contains", "values": [query]}
+              ],
+              "operator": "OR"
+            }
+          ]
+        }]
+      }
+      
+      const response = await this.apperClient.fetchRecords(this.tableName, params)
+      
+      if (!response.success) {
+        console.error(response.message)
+        toast.error(response.message)
+        return []
+      }
+      
+      return response.data || []
+    } catch (error) {
+      console.error("Error searching products:", error?.response?.data?.message || error)
+      return []
+    }
   }
 
   async getFeatured() {
-    await delay(200)
-    return this.products
-      .filter(p => p.featured)
-      .slice(0, 8)
-      .map(p => ({ ...p }))
+    try {
+      const params = {
+        fields: [
+          {"field": {"Name": "Id"}},
+          {"field": {"Name": "Name"}},
+          {"field": {"Name": "brand_c"}},
+          {"field": {"Name": "model_c"}},
+          {"field": {"Name": "price_c"}},
+          {"field": {"Name": "original_price_c"}},
+          {"field": {"Name": "images_c"}},
+          {"field": {"Name": "category_c"}},
+          {"field": {"Name": "movement_c"}},
+          {"field": {"Name": "case_size_c"}},
+          {"field": {"Name": "case_material_c"}},
+          {"field": {"Name": "band_material_c"}},
+          {"field": {"Name": "band_options_c"}},
+          {"field": {"Name": "water_resistance_c"}},
+          {"field": {"Name": "description_c"}},
+          {"field": {"Name": "specifications_c"}},
+          {"field": {"Name": "in_stock_c"}},
+          {"field": {"Name": "stock_count_c"}},
+          {"field": {"Name": "featured_c"}}
+        ],
+        where: [{"FieldName": "featured_c", "Operator": "EqualTo", "Values": [true]}],
+        pagingInfo: {"limit": 8, "offset": 0}
+      }
+      
+      const response = await this.apperClient.fetchRecords(this.tableName, params)
+      
+      if (!response.success) {
+        console.error(response.message)
+        toast.error(response.message)
+        return []
+      }
+      
+      return response.data || []
+    } catch (error) {
+      console.error("Error fetching featured products:", error?.response?.data?.message || error)
+      return []
+    }
   }
 
   async getRelated(productId, limit = 4) {
-    await delay(200)
-    const currentProduct = this.products.find(p => p.Id === parseInt(productId))
-    if (!currentProduct) return []
+    try {
+      // First get the current product to find its brand and category
+      const currentProduct = await this.getById(productId)
+      if (!currentProduct) return []
 
-    return this.products
-      .filter(p => 
-        p.Id !== parseInt(productId) && 
-        (p.brand === currentProduct.brand || p.category === currentProduct.category)
-      )
-      .slice(0, limit)
-      .map(p => ({ ...p }))
+      const params = {
+        fields: [
+          {"field": {"Name": "Id"}},
+          {"field": {"Name": "Name"}},
+          {"field": {"Name": "brand_c"}},
+          {"field": {"Name": "model_c"}},
+          {"field": {"Name": "price_c"}},
+          {"field": {"Name": "original_price_c"}},
+          {"field": {"Name": "images_c"}},
+          {"field": {"Name": "category_c"}},
+          {"field": {"Name": "movement_c"}},
+          {"field": {"Name": "case_size_c"}},
+          {"field": {"Name": "case_material_c"}},
+          {"field": {"Name": "band_material_c"}},
+          {"field": {"Name": "band_options_c"}},
+          {"field": {"Name": "water_resistance_c"}},
+          {"field": {"Name": "description_c"}},
+          {"field": {"Name": "specifications_c"}},
+          {"field": {"Name": "in_stock_c"}},
+          {"field": {"Name": "stock_count_c"}},
+          {"field": {"Name": "featured_c"}}
+        ],
+        whereGroups: [{
+          "operator": "AND",
+          "subGroups": [
+            {
+              "conditions": [
+                {"fieldName": "Id", "operator": "NotEqualTo", "values": [parseInt(productId)]}
+              ],
+              "operator": "AND"
+            },
+            {
+              "conditions": [
+                {"fieldName": "brand_c", "operator": "EqualTo", "values": [currentProduct.brand_c]},
+                {"fieldName": "category_c", "operator": "EqualTo", "values": [currentProduct.category_c]}
+              ],
+              "operator": "OR"
+            }
+          ]
+        }],
+        pagingInfo: {"limit": limit, "offset": 0}
+      }
+      
+      const response = await this.apperClient.fetchRecords(this.tableName, params)
+      
+      if (!response.success) {
+        console.error(response.message)
+        return []
+      }
+      
+      return response.data || []
+    } catch (error) {
+      console.error("Error fetching related products:", error?.response?.data?.message || error)
+      return []
+    }
   }
 
   async filter(filters) {
-    await delay(400)
-    let filtered = [...this.products]
-
-    // Brand filter
-    if (filters.brands && filters.brands.length > 0) {
-      filtered = filtered.filter(p => filters.brands.includes(p.brand))
-    }
-
-    // Category filter
-    if (filters.categories && filters.categories.length > 0) {
-      filtered = filtered.filter(p => 
-        filters.categories.some(cat => 
-          p.category.toLowerCase().includes(cat.toLowerCase())
-        )
-      )
-    }
-
-    // Movement filter
-    if (filters.movements && filters.movements.length > 0) {
-      filtered = filtered.filter(p => 
-        filters.movements.some(movement => 
-          p.movement.toLowerCase().includes(movement.toLowerCase())
-        )
-      )
-    }
-
-    // Price range filter
-    if (filters.priceRange && filters.priceRange.length === 2) {
-      const [min, max] = filters.priceRange
-      filtered = filtered.filter(p => p.price >= min && p.price <= max)
-    }
-
-    // Case size filter
-    if (filters.caseSizes && filters.caseSizes.length > 0) {
-      filtered = filtered.filter(p => {
-        const size = p.caseSize
-        return filters.caseSizes.some(range => {
-          if (range === "<38mm") return size < 38
-          if (range === "38-42mm") return size >= 38 && size <= 42
-          if (range === "42-46mm") return size >= 42 && size <= 46
-          if (range === ">46mm") return size > 46
-          return false
-        })
-      })
-    }
-
-    // Sort by price, name, or relevance
-    if (filters.sortBy) {
-      switch (filters.sortBy) {
-        case "price-low":
-          filtered.sort((a, b) => a.price - b.price)
-          break
-        case "price-high":
-          filtered.sort((a, b) => b.price - a.price)
-          break
-        case "name":
-          filtered.sort((a, b) => `${a.brand} ${a.model}`.localeCompare(`${b.brand} ${b.model}`))
-          break
-        default:
-          // Keep original order
-          break
+    try {
+      const params = {
+        fields: [
+          {"field": {"Name": "Id"}},
+          {"field": {"Name": "Name"}},
+          {"field": {"Name": "brand_c"}},
+          {"field": {"Name": "model_c"}},
+          {"field": {"Name": "price_c"}},
+          {"field": {"Name": "original_price_c"}},
+          {"field": {"Name": "images_c"}},
+          {"field": {"Name": "category_c"}},
+          {"field": {"Name": "movement_c"}},
+          {"field": {"Name": "case_size_c"}},
+          {"field": {"Name": "case_material_c"}},
+          {"field": {"Name": "band_material_c"}},
+          {"field": {"Name": "band_options_c"}},
+          {"field": {"Name": "water_resistance_c"}},
+          {"field": {"Name": "description_c"}},
+          {"field": {"Name": "specifications_c"}},
+          {"field": {"Name": "in_stock_c"}},
+          {"field": {"Name": "stock_count_c"}},
+          {"field": {"Name": "featured_c"}}
+        ],
+        where: []
       }
-    }
 
-    return filtered.map(p => ({ ...p }))
+      // Brand filter
+      if (filters.brands && filters.brands.length > 0) {
+        params.where.push({"FieldName": "brand_c", "Operator": "ExactMatch", "Values": filters.brands})
+      }
+
+      // Category filter
+      if (filters.categories && filters.categories.length > 0) {
+        params.where.push({"FieldName": "category_c", "Operator": "ExactMatch", "Values": filters.categories})
+      }
+
+      // Movement filter
+      if (filters.movements && filters.movements.length > 0) {
+        params.where.push({"FieldName": "movement_c", "Operator": "ExactMatch", "Values": filters.movements})
+      }
+
+      // Price range filter
+      if (filters.priceRange && filters.priceRange.length === 2) {
+        const [min, max] = filters.priceRange
+        if (max < 50000) {
+          params.where.push({"FieldName": "price_c", "Operator": "LessThanOrEqualTo", "Values": [max]})
+        }
+        if (min > 0) {
+          params.where.push({"FieldName": "price_c", "Operator": "GreaterThanOrEqualTo", "Values": [min]})
+        }
+      }
+
+      // Sort by price, name, or relevance
+      if (filters.sortBy) {
+        switch (filters.sortBy) {
+          case "price-low":
+            params.orderBy = [{"fieldName": "price_c", "sorttype": "ASC"}]
+            break
+          case "price-high":
+            params.orderBy = [{"fieldName": "price_c", "sorttype": "DESC"}]
+            break
+          case "name":
+            params.orderBy = [{"fieldName": "brand_c", "sorttype": "ASC"}]
+            break
+          default:
+            params.orderBy = [{"fieldName": "Id", "sorttype": "ASC"}]
+            break
+        }
+      }
+      
+      const response = await this.apperClient.fetchRecords(this.tableName, params)
+      
+      if (!response.success) {
+        console.error(response.message)
+        toast.error(response.message)
+        return []
+      }
+      
+      return response.data || []
+    } catch (error) {
+      console.error("Error filtering products:", error?.response?.data?.message || error)
+      return []
+    }
   }
 
   async getBrands() {
-    await delay(100)
-    const brands = [...new Set(this.products.map(p => p.brand))]
-    return brands.sort()
+    try {
+      const params = {
+        fields: [{"field": {"Name": "brand_c"}}],
+        groupBy: ["brand_c"],
+        orderBy: [{"fieldName": "brand_c", "sorttype": "ASC"}]
+      }
+      
+      const response = await this.apperClient.fetchRecords(this.tableName, params)
+      
+      if (!response.success) {
+        console.error(response.message)
+        return []
+      }
+      
+      return response.data?.map(item => item.brand_c).filter(Boolean) || []
+    } catch (error) {
+      console.error("Error fetching brands:", error?.response?.data?.message || error)
+      return []
+    }
   }
 
   async getCategories() {
-    await delay(100)
-    const categories = [...new Set(this.products.map(p => p.category))]
-    return categories.sort()
+    try {
+      const params = {
+        fields: [{"field": {"Name": "category_c"}}],
+        groupBy: ["category_c"],
+        orderBy: [{"fieldName": "category_c", "sorttype": "ASC"}]
+      }
+      
+      const response = await this.apperClient.fetchRecords(this.tableName, params)
+      
+      if (!response.success) {
+        console.error(response.message)
+        return []
+      }
+      
+      return response.data?.map(item => item.category_c).filter(Boolean) || []
+    } catch (error) {
+      console.error("Error fetching categories:", error?.response?.data?.message || error)
+      return []
+    }
   }
 }
 
+export default new ProductService()
 export default new ProductService()

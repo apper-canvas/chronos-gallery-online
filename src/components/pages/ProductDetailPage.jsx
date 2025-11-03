@@ -23,11 +23,12 @@ const ProductDetailPage = () => {
   const [quickViewProduct, setQuickViewProduct] = useState(null)
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false)
   
-  React.useEffect(() => {
+React.useEffect(() => {
     if (product) {
       setSelectedImage(0)
       setQuantity(1)
-      setSelectedBand(product.bandOptions?.[0] || "")
+      const bandOptions = product.band_options_c ? JSON.parse(product.band_options_c) : []
+      setSelectedBand(bandOptions[0] || "")
     }
   }, [product])
   
@@ -80,15 +81,15 @@ const ProductDetailPage = () => {
   }
   
   const specifications = [
-    { label: "Brand", value: product.brand },
-    { label: "Model", value: product.model },
-    { label: "Movement", value: product.movement },
-    { label: "Case Size", value: `${product.caseSize}mm` },
-    { label: "Case Material", value: product.caseMaterial },
-    { label: "Band Material", value: product.bandMaterial },
-    { label: "Water Resistance", value: product.waterResistance },
-    { label: "Caliber", value: product.specifications?.caliber || "N/A" },
-    { label: "Power Reserve", value: product.specifications?.powerReserve || "N/A" }
+{ label: "Brand", value: product.brand_c },
+    { label: "Model", value: product.model_c },
+    { label: "Movement", value: product.movement_c },
+    { label: "Case Size", value: `${product.case_size_c}mm` },
+    { label: "Case Material", value: product.case_material_c },
+    { label: "Band Material", value: product.band_material_c },
+    { label: "Water Resistance", value: product.water_resistance_c },
+    { label: "Caliber", value: JSON.parse(product.specifications_c || '{}').caliber || "N/A" },
+    { label: "Power Reserve", value: JSON.parse(product.specifications_c || '{}').powerReserve || "N/A" }
   ]
   
   return (
@@ -101,9 +102,9 @@ const ProductDetailPage = () => {
             <li><ApperIcon name="ChevronRight" size={16} /></li>
             <li><Link to="/products" className="hover:text-gold">Watches</Link></li>
             <li><ApperIcon name="ChevronRight" size={16} /></li>
-            <li><Link to={`/products?category=${product.category.toLowerCase()}`} className="hover:text-gold">{product.category}</Link></li>
+<li><Link to={`/products?category=${product.category_c.toLowerCase()}`} className="hover:text-gold">{product.category_c}</Link></li>
             <li><ApperIcon name="ChevronRight" size={16} /></li>
-            <li className="text-primary font-medium">{product.brand} {product.model}</li>
+            <li className="text-primary font-medium">{product.brand_c} {product.model_c}</li>
           </ol>
         </nav>
         
@@ -118,15 +119,15 @@ const ProductDetailPage = () => {
               transition={{ duration: 0.3 }}
             >
               <img
-                src={product.images[selectedImage]}
-                alt={`${product.brand} ${product.model}`}
+src={JSON.parse(product.images_c || '[]')[selectedImage]}
+                alt={`${product.brand_c} ${product.model_c}`}
                 className="w-full h-full object-cover"
               />
             </motion.div>
             
             {product.images.length > 1 && (
-              <div className="flex gap-3">
-                {product.images.map((image, index) => (
+<div className="flex gap-3">
+                {JSON.parse(product.images_c || '[]').map((image, index) => (
                   <button
                     key={index}
                     onClick={() => setSelectedImage(index)}
@@ -149,19 +150,19 @@ const ProductDetailPage = () => {
           <div className="space-y-6">
             <div>
               <p className="text-gold font-medium uppercase tracking-wide mb-2">
-                {product.brand}
+{product.brand_c}
               </p>
               <h1 className="font-display text-3xl md:text-4xl font-bold text-primary mb-4">
-                {product.model}
+                {product.model_c}
               </h1>
               <div className="flex items-center gap-4 mb-4">
                 <span className="text-4xl font-bold text-primary">
-                  {formatPrice(product.price)}
+                  {formatPrice(product.price_c)}
                 </span>
-                {product.originalPrice && product.originalPrice > product.price && (
+                {product.original_price_c && product.original_price_c > product.price_c && (
                   <div className="flex items-center gap-2">
                     <span className="text-xl text-gray-500 line-through">
-                      {formatPrice(product.originalPrice)}
+                      {formatPrice(product.original_price_c)}
                     </span>
                     <Badge variant="error">
                       SALE
@@ -173,10 +174,10 @@ const ProductDetailPage = () => {
             
             {/* Stock Status */}
             <div>
-              {product.inStock ? (
+{product.in_stock_c ? (
                 <Badge variant="success" className="text-sm">
                   <ApperIcon name="Check" size={16} className="mr-1" />
-                  In Stock ({product.stockCount} available)
+                  In Stock ({product.stock_count_c} available)
                 </Badge>
               ) : (
                 <Badge variant="error" className="text-sm">
@@ -188,43 +189,46 @@ const ProductDetailPage = () => {
             
             {/* Key Specifications */}
             <div className="flex flex-wrap gap-2">
-              <Badge variant="outline">{product.movement}</Badge>
-              <Badge variant="outline">{product.caseSize}mm</Badge>
-              <Badge variant="outline">{product.waterResistance}</Badge>
-              <Badge variant="outline">{product.caseMaterial}</Badge>
+<Badge variant="outline">{product.movement_c}</Badge>
+              <Badge variant="outline">{product.case_size_c}mm</Badge>
+              <Badge variant="outline">{product.water_resistance_c}</Badge>
+              <Badge variant="outline">{product.case_material_c}</Badge>
             </div>
             
             {/* Description */}
             <div>
-              <p className="text-gray-700 leading-relaxed text-lg">
-                {product.description}
+<p className="text-gray-700 leading-relaxed text-lg">
+                {product.description_c}
               </p>
             </div>
             
             {/* Band Options */}
-            {product.bandOptions && product.bandOptions.length > 1 && (
-              <div>
-                <h3 className="font-semibold text-primary mb-3">Band Options</h3>
-                <div className="grid grid-cols-2 gap-2">
-                  {product.bandOptions.map((band) => (
-                    <label
-                      key={band}
-                      className="flex items-center space-x-2 cursor-pointer p-3 border rounded-lg hover:bg-gray-50 transition-colors"
-                    >
-                      <input
-                        type="radio"
-                        name="band"
-                        value={band}
-                        checked={selectedBand === band}
-                        onChange={(e) => setSelectedBand(e.target.value)}
-                        className="text-gold focus:ring-gold focus:ring-opacity-50"
-                      />
-                      <span className="font-medium">{band}</span>
-                    </label>
-                  ))}
+{(() => {
+              const bandOptions = product.band_options_c ? JSON.parse(product.band_options_c) : []
+              return bandOptions && bandOptions.length > 1 && (
+                <div>
+                  <h3 className="font-semibold text-primary mb-3">Band Options</h3>
+                  <div className="grid grid-cols-2 gap-2">
+                    {bandOptions.map((band) => (
+                      <label
+                        key={band}
+                        className="flex items-center space-x-2 cursor-pointer p-3 border rounded-lg hover:bg-gray-50 transition-colors"
+                      >
+                        <input
+                          type="radio"
+                          name="band"
+                          value={band}
+                          checked={selectedBand === band}
+                          onChange={(e) => setSelectedBand(e.target.value)}
+                          className="text-gold focus:ring-gold focus:ring-opacity-50"
+                        />
+                        <span className="font-medium">{band}</span>
+                      </label>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
+              )
+            })()}
             
             {/* Quantity & Add to Cart */}
             {product.inStock && (
@@ -235,8 +239,8 @@ const ProductDetailPage = () => {
                   </label>
                   <QuantitySelector
                     value={quantity}
-                    onChange={setQuantity}
-                    max={product.stockCount || 10}
+onChange={setQuantity}
+                    max={product.stock_count_c || 10}
                   />
                 </div>
                 

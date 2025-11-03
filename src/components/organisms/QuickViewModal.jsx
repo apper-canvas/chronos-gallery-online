@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { Link } from "react-router-dom"
-import ApperIcon from "@/components/ApperIcon"
-import Button from "@/components/atoms/Button"
-import Badge from "@/components/atoms/Badge"
-import QuantitySelector from "@/components/molecules/QuantitySelector"
+import React, { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import ApperIcon from "@/components/ApperIcon";
+import Badge from "@/components/atoms/Badge";
+import Button from "@/components/atoms/Button";
+import QuantitySelector from "@/components/molecules/QuantitySelector";
 
 const QuickViewModal = ({ 
   product, 
@@ -20,7 +20,8 @@ const QuickViewModal = ({
     if (product) {
       setSelectedImage(0)
       setQuantity(1)
-      setSelectedBand(product.bandOptions?.[0] || "")
+const bandOptions = product.band_options_c ? JSON.parse(product.band_options_c) : []
+      setSelectedBand(bandOptions[0] || "")
     }
   }, [product])
   
@@ -58,11 +59,11 @@ const QuickViewModal = ({
   }
   
   const specifications = [
-    { label: "Movement", value: product.movement },
-    { label: "Case Size", value: `${product.caseSize}mm` },
-    { label: "Case Material", value: product.caseMaterial },
-    { label: "Water Resistance", value: product.waterResistance },
-    { label: "Band Material", value: product.bandMaterial }
+{ label: "Movement", value: product.movement_c },
+    { label: "Case Size", value: `${product.case_size_c}mm` },
+    { label: "Case Material", value: product.case_material_c },
+    { label: "Water Resistance", value: product.water_resistance_c },
+    { label: "Band Material", value: product.band_material_c }
   ]
   
   return (
@@ -105,15 +106,15 @@ const QuickViewModal = ({
                   <div className="space-y-4">
                     <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden">
                       <img
-                        src={product.images[selectedImage]}
-                        alt={`${product.brand} ${product.model}`}
+src={JSON.parse(product.images_c || '[]')[selectedImage]}
+                        alt={`${product.brand_c} ${product.model_c}`}
                         className="w-full h-full object-cover"
                       />
                     </div>
                     
                     {product.images.length > 1 && (
-                      <div className="flex gap-2">
-                        {product.images.map((image, index) => (
+<div className="flex gap-2">
+                        {JSON.parse(product.images_c || '[]').map((image, index) => (
                           <button
                             key={index}
                             onClick={() => setSelectedImage(index)}
@@ -136,19 +137,19 @@ const QuickViewModal = ({
                   <div className="space-y-6">
                     <div>
                       <p className="text-sm font-medium text-gold uppercase tracking-wide mb-1">
-                        {product.brand}
+{product.brand_c}
                       </p>
                       <h3 className="font-display text-2xl font-semibold text-primary mb-2">
-                        {product.model}
+                        {product.model_c}
                       </h3>
                       <div className="text-3xl font-bold text-primary">
-                        {formatPrice(product.price)}
+                        {formatPrice(product.price_c)}
                       </div>
                     </div>
                     
                     {/* Stock Status */}
                     <div>
-                      {product.inStock ? (
+{product.in_stock_c ? (
                         <Badge variant="success">In Stock</Badge>
                       ) : (
                         <Badge variant="error">Out of Stock</Badge>
@@ -157,8 +158,8 @@ const QuickViewModal = ({
                     
                     {/* Description */}
                     <div>
-                      <p className="text-gray-700 leading-relaxed">
-                        {product.description}
+<p className="text-gray-700 leading-relaxed">
+                        {product.description_c}
                       </p>
                     </div>
                     
@@ -175,33 +176,36 @@ const QuickViewModal = ({
                       </div>
                     </div>
                     
-                    {/* Band Options */}
-                    {product.bandOptions && product.bandOptions.length > 1 && (
-                      <div>
-                        <h4 className="font-semibold text-primary mb-3">Band Options</h4>
-                        <div className="grid grid-cols-2 gap-2">
-                          {product.bandOptions.map((band) => (
-                            <label
-                              key={band}
-                              className="flex items-center space-x-2 cursor-pointer"
-                            >
-                              <input
-                                type="radio"
-                                name="band"
-                                value={band}
-                                checked={selectedBand === band}
-                                onChange={(e) => setSelectedBand(e.target.value)}
-                                className="text-gold focus:ring-gold focus:ring-opacity-50"
-                              />
-                              <span className="text-sm">{band}</span>
-                            </label>
-                          ))}
+{/* Band Options */}
+                    {(() => {
+                      const bandOptions = product.band_options_c ? JSON.parse(product.band_options_c) : []
+                      return bandOptions && bandOptions.length > 1 && (
+                        <div>
+                          <h4 className="font-semibold text-primary mb-2">Band Options</h4>
+                          <div className="space-y-1">
+                            {bandOptions.map((band) => (
+                              <label
+                                key={band}
+                                className="flex items-center space-x-2 cursor-pointer"
+                              >
+                                <input
+                                  type="radio"
+                                  name="band"
+                                  value={band}
+                                  checked={selectedBand === band}
+                                  onChange={(e) => setSelectedBand(e.target.value)}
+                                  className="text-gold focus:ring-gold focus:ring-opacity-50"
+                                />
+                                <span className="text-sm">{band}</span>
+                              </label>
+                            ))}
+                          </div>
                         </div>
-                      </div>
-                    )}
+                      )
+                    })()}
                     
                     {/* Quantity & Add to Cart */}
-                    {product.inStock && (
+                    {product.in_stock_c && (
                       <div className="space-y-4">
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -210,7 +214,7 @@ const QuickViewModal = ({
                           <QuantitySelector
                             value={quantity}
                             onChange={setQuantity}
-                            max={product.stockCount || 10}
+                            max={product.stock_count_c || 10}
                           />
                         </div>
                         

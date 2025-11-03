@@ -45,14 +45,14 @@ const ProductCard = ({
         <Link to={`/product/${product.Id}`}>
           <div className="relative aspect-square overflow-hidden bg-gray-50">
             <img
-              src={product.images[0]}
-              alt={`${product.brand} ${product.model}`}
+src={JSON.parse(product.images_c || '[]')[0]}
+              alt={`${product.brand_c} ${product.model_c}`}
               className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
               loading="lazy"
             />
             
             {/* Featured Badge */}
-            {product.featured && (
+{product.featured_c && (
               <div className="absolute top-3 left-3">
                 <Badge variant="gold" className="text-xs">
                   Featured
@@ -61,7 +61,7 @@ const ProductCard = ({
             )}
             
             {/* Stock Badge */}
-            {!product.inStock && (
+{!product.in_stock_c && (
               <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
                 <Badge variant="error">
                   Out of Stock
@@ -81,7 +81,7 @@ const ProductCard = ({
                   <ApperIcon name="Eye" size={18} />
                 </Button>
                 
-                {product.inStock && (
+{product.in_stock_c && (
                   <Button
                     variant="primary"
                     size="sm"
@@ -100,23 +100,23 @@ const ProductCard = ({
             {/* Brand & Model */}
             <div>
               <p className="text-sm font-medium text-gold uppercase tracking-wide">
-                {product.brand}
+{product.brand_c}
               </p>
               <h3 className="font-display text-lg font-semibold text-primary line-clamp-2">
-                {product.model}
+                {product.model_c}
               </h3>
             </div>
             
             {/* Specifications */}
             <div className="flex flex-wrap gap-2">
               <Badge variant="outline" className="text-xs">
-                {product.movement}
+{product.movement_c}
               </Badge>
               <Badge variant="outline" className="text-xs">
-                {product.caseSize}mm
+                {product.case_size_c}mm
               </Badge>
               <Badge variant="outline" className="text-xs">
-                {product.waterResistance}
+                {product.water_resistance_c}
               </Badge>
             </div>
             
@@ -124,16 +124,16 @@ const ProductCard = ({
             <div className="flex items-center justify-between">
               <div>
                 <span className="text-2xl font-bold text-primary">
-                  {formatPrice(product.price)}
+{formatPrice(product.price_c)}
                 </span>
-                {product.originalPrice && product.originalPrice > product.price && (
+                {product.original_price_c && product.original_price_c > product.price_c && (
                   <span className="ml-2 text-sm text-gray-500 line-through">
-                    {formatPrice(product.originalPrice)}
+                    {formatPrice(product.original_price_c)}
                   </span>
                 )}
               </div>
               
-              {product.inStock && (
+{product.in_stock_c && (
                 <Button
                   variant="ghost"
                   size="icon"

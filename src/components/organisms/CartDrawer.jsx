@@ -22,7 +22,7 @@ const CartDrawer = ({
     }).format(price)
   }
   
-  const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+const subtotal = cartItems.reduce((sum, item) => sum + (item.price_c * item.quantity_c), 0)
   const tax = subtotal * 0.08
   const total = subtotal + tax
   
@@ -92,7 +92,7 @@ const CartDrawer = ({
                 <div className="p-6 space-y-6">
                   {cartItems.map((item) => (
                     <CartItem
-                      key={`${item.Id}-${item.selectedBand || "default"}`}
+key={`${item.Id}-${item.selected_band_c || "default"}`}
                       item={item}
                       onUpdateQuantity={onUpdateQuantity}
                       onRemove={onRemoveItem}
@@ -163,8 +163,8 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
     <div className="flex gap-4">
       <div className="w-20 h-20 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
         <img
-          src={item.images[0]}
-          alt={`${item.brand} ${item.model}`}
+src={JSON.parse(item.images_c || '[]')[0]}
+          alt={`${item.brand_c} ${item.model_c}`}
           className="w-full h-full object-cover"
         />
       </div>
@@ -172,12 +172,12 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
       <div className="flex-1 space-y-2">
         <div>
           <h4 className="font-medium text-primary line-clamp-1">
-            {item.brand} {item.model}
+{item.brand_c} {item.model_c}
           </h4>
-          <p className="text-sm text-gray-600">
-            {formatPrice(item.price)}
-            {item.selectedBand && (
-              <span className="ml-2">• {item.selectedBand}</span>
+<p className="text-sm text-gray-600">
+            {formatPrice(item.price_c)}
+            {item.selected_band_c && (
+              <span className="ml-2">• {item.selected_band_c}</span>
             )}
           </p>
         </div>
@@ -185,9 +185,9 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
         <div className="flex items-center justify-between">
           <QuantitySelector
             value={item.quantity}
-            onChange={(quantity) => onUpdateQuantity(item.Id, quantity, item.selectedBand)}
+onChange={(quantity) => onUpdateQuantity(item.product_id_c, quantity, item.selected_band_c)}
             min={1}
-            max={item.stockCount || 10}
+max={item.stock_count_c || 10}
           />
           
           <div className="flex items-center gap-3">
@@ -197,7 +197,7 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => onRemove(item.Id, item.selectedBand)}
+onClick={() => onRemove(item.product_id_c, item.selected_band_c)}
               className="text-gray-400 hover:text-error"
             >
               <ApperIcon name="Trash2" size={16} />

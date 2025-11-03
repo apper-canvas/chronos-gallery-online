@@ -46,7 +46,7 @@ const CartPage = () => {
     )
   }
   
-  if (!cart.items || cart.items.length === 0) {
+if (!cart.items || cart.items.length === 0) {
     return (
       <div className="pt-16 min-h-screen bg-background">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -80,7 +80,7 @@ const CartPage = () => {
               Shopping Cart
             </h1>
             <p className="text-gray-600 mt-1">
-              {cart.items.length} {cart.items.length === 1 ? "item" : "items"}
+{cart.items.length} {cart.items.length === 1 ? "item" : "items"}
             </p>
           </div>
           
@@ -99,9 +99,9 @@ const CartPage = () => {
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Cart Items */}
           <div className="lg:col-span-2 space-y-4">
-            {cart.items.map((item) => (
+{cart.items.map((item) => (
               <CartItem
-                key={`${item.Id || item.productId}-${item.selectedBand || "default"}`}
+                key={`${item.Id || item.product_id_c}-${item.selected_band_c || "default"}`}
                 item={item}
                 onUpdateQuantity={handleQuantityChange}
                 onRemove={handleRemoveItem}
@@ -173,10 +173,9 @@ const CartPage = () => {
 }
 
 const CartItem = ({ item, onUpdateQuantity, onRemove, formatPrice }) => {
-  const productId = item.Id || item.productId
-  const selectedBand = item.selectedBand || ""
-  const itemTotal = item.price * item.quantity
-  
+const productId = item.product_id_c || item.Id
+  const selectedBand = item.selected_band_c || ""
+  const itemTotal = item.price_c * item.quantity_c
   return (
     <motion.div
       layout
@@ -190,23 +189,23 @@ const CartItem = ({ item, onUpdateQuantity, onRemove, formatPrice }) => {
           {/* Product Image */}
           <div className="w-24 h-24 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
             <img
-              src={item.images?.[0] || item.image}
-              alt={`${item.brand} ${item.model}`}
+src={JSON.parse(item.images_c || '[]')[0] || item.image}
+              alt={`${item.brand_c} ${item.model_c}`}
               className="w-full h-full object-cover"
             />
           </div>
           
           {/* Product Details */}
           <div className="flex-1 space-y-2">
-            <div>
+<div>
               <Link
                 to={`/product/${productId}`}
                 className="font-display text-lg font-semibold text-primary hover:text-gold transition-colors"
               >
-                {item.brand} {item.model}
+                {item.brand_c} {item.model_c}
               </Link>
               <p className="text-gray-600 text-sm">
-                {formatPrice(item.price)}
+                {formatPrice(item.price_c)}
                 {selectedBand && (
                   <span className="ml-2">• {selectedBand}</span>
                 )}
@@ -215,10 +214,10 @@ const CartItem = ({ item, onUpdateQuantity, onRemove, formatPrice }) => {
             
             <div className="flex items-center justify-between">
               <QuantitySelector
-                value={item.quantity}
+value={item.quantity_c}
                 onChange={(quantity) => onUpdateQuantity(productId, quantity, selectedBand)}
                 min={1}
-                max={item.stockCount || 10}
+                max={item.stock_count_c || 10}
               />
               
               <div className="flex items-center gap-4">
