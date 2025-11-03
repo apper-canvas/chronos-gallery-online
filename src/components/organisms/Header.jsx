@@ -115,10 +115,9 @@ const categories = [
                 {category.name}
               </Link>
             ))}
-            <div className="pt-2 border-t border-gray-200">
+<div className="pt-2 border-t border-gray-200">
               <LogoutButton mobile onClick={() => setIsMobileMenuOpen(false)} />
             </div>
-            ))}
           </nav>
         </div>
       </div>
