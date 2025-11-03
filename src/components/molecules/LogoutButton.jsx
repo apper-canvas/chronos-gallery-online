@@ -5,7 +5,8 @@ import ApperIcon from '@/components/ApperIcon'
 import Button from '@/components/atoms/Button'
 
 const LogoutButton = ({ mobile = false, onClick }) => {
-  const { logout } = useContext(AuthContext)
+const authContext = useContext(AuthContext)
+  const { logout } = authContext || {}
   const { user, isAuthenticated } = useSelector((state) => state.user)
 
   if (!isAuthenticated || !user) {
